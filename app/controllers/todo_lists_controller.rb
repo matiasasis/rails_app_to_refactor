@@ -48,6 +48,7 @@ class TodoListsController < ApplicationController
 
   private
 
+  # Note to self: double_check if endless method declarations are "okay" with the devs
     def todo_lists_only_non_default? = action_name.in?(['update', 'destroy'])
 
     def set_todo_list

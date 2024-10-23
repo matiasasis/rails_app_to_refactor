@@ -27,6 +27,9 @@ class ApplicationController < ActionController::API
       render_json(400, error: exception.message)
     end
 
+  # if we have any other views that aren't going to use a todolist (settings, user profile)
+  # then we might want to subclass ApplicationController and have this method there, then updating
+  # TodoController and TodoListController
     def set_todo_lists
       user_todo_lists = current_user.todo_lists
 
