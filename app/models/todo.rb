@@ -20,6 +20,7 @@ class Todo < ApplicationRecord
     end
   }
 
+  # Same thing, consider extracting this below, and referencing by :method_name
   scope :order_by, ->(params) {
     order = params[:order]&.strip&.downcase == 'asc' ? :asc : :desc
 
@@ -30,6 +31,7 @@ class Todo < ApplicationRecord
     order(column_name => order)
   }
 
+  # this is readable, but simple enough to be refactored into a ternary if needed (no else case)
   before_validation on: :update do
     case completed
     when 'true' then complete
@@ -47,10 +49,12 @@ class Todo < ApplicationRecord
     due_at <= Time.current
   end
 
+  # I believe this is a bit redundant, but worth chatting about
   def incomplete?
     completed_at.nil?
   end
 
+  # consider using 1 method (completed), and updating uses to negate when appropriate
   def completed?
     !incomplete?
   end
@@ -62,6 +66,10 @@ class Todo < ApplicationRecord
     'incomplete'
   end
 
+  # consider a single method when we are setting the completion state
+  # These methods are repetitive (and covering inverses), we could for instance have a
+  # .set_completion() method, which could or could not take a param (in the not case, making an assumption
+  # that flipping the boolean would be okay) and set completed_at inline.
   def complete
     self.completed_at = Time.current unless completed?
   end

@@ -8,6 +8,7 @@ class TodoList < ApplicationRecord
   scope :default, -> { where(default: true) }
   scope :non_default, -> { where(default: false) }
 
+  # Right now, using a 4 line lambda is okay, but I would consider extract a method and referencing it here
   scope :order_by, ->(params) {
     order = params[:order]&.strip&.downcase == 'asc' ? :asc : :desc
 
@@ -22,6 +23,8 @@ class TodoList < ApplicationRecord
   validates :default, inclusion: { in: [true, false] }
   validate :default_uniqueness
 
+  # A typical pattern would be to make a new serializer class for serializing stored or received json <-> hash
+  # not a strong recommendation, but something to consider
   def serialize_as_json
     as_json(except: [:user_id])
   end
