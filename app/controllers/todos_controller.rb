@@ -14,12 +14,15 @@ class TodosController < ApplicationController
   end
 
   def index
+    # Use a gem like JSONSerializer to serialize data
+    # This will be helpful as the app grows so we don't have to repeatedly create these methods
     todos = @todos.filter_by_status(params).order_by(params).map(&:serialize_as_json)
 
     render_json(200, todos:)
   end
 
   def create
+    # Add error handling while creating to prevent generic 500 responses
     todo = @todos.create(todo_params.except(:completed))
 
     if todo.valid?
@@ -65,6 +68,8 @@ class TodosController < ApplicationController
 
     def todo_lists_only_non_default? = false
 
+    # This method is trying to perform actions for separate routes/purposes - we'd be
+    # better off separating the logic into specific method for specific routes/purposes
     def set_todos
       scope =
         if params[:todo_list_id].present?
